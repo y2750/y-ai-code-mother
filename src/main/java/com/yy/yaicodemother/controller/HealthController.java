@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Slf4j
-@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/health")
+public class HealthController {
     @GetMapping("/")
     public BaseResponse<String> test() {
         return ResultUtils.success("success");
