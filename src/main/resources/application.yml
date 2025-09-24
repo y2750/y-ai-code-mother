@@ -1,10 +1,18 @@
 spring:
   application:
     name:y-ai-code-mother-backend
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/y_ai_code_mother
+    username: root
+    password: a600523
+
 server:
   port: 8000
   servlet:
     context-path: /api
+
 
 # springdoc-openapi????
 springdoc:
