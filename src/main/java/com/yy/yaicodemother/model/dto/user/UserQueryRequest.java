@@ -1,4 +1,4 @@
-package com.yy.yaicodemother.model.dto;
+package com.yy.yaicodemother.model.dto.user;
 
 import com.yy.yaicodemother.common.PageRequest;
 import lombok.Data;

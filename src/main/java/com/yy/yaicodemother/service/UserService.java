@@ -2,7 +2,7 @@ package com.yy.yaicodemother.service;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
-import com.yy.yaicodemother.model.dto.UserQueryRequest;
+import com.yy.yaicodemother.model.dto.user.UserQueryRequest;
 import com.yy.yaicodemother.model.entity.User;
 import com.yy.yaicodemother.model.vo.LoginUserVO;
 import com.yy.yaicodemother.model.vo.UserVO;

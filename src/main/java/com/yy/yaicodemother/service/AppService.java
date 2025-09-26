@@ -6,8 +6,10 @@ import com.mybatisflex.core.service.IService;
 import com.yy.yaicodemother.model.dto.app.AppQueryRequest;
 import com.yy.yaicodemother.model.entity.App;
 
+import com.yy.yaicodemother.model.entity.User;
 import com.yy.yaicodemother.model.vo.AppVO;
 import com.yy.yaicodemother.model.vo.UserVO;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +24,15 @@ import java.util.stream.Collectors;
  */
 public interface AppService extends IService<App> {
 
-    void checkAppOwnership(Long appId, Long userId);
+    Flux<String>chatToGenCode(Long appId, String message, User loginUser);
 
+    /**
+     * 部署应用
+     * @param appId
+     * @param loginUser
+     * @return
+     */
+    String deployApp(Long appId, User loginUser);
 
     AppVO getAppVO(App app);
 

@@ -1,7 +1,9 @@
 spring:
   application:
     name:y-ai-code-mother-backend
-
+  session:
+    store-type: redis
+    timeout: 2592000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/y_ai_code_mother
@@ -9,11 +11,23 @@ spring:
     password: a600523
   profiles:
     active: local
+  # redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      ttl: 3600
+      database: 0
+
 
 server:
   port: 8000
   servlet:
     context-path: /api
+    session:
+      cookie:
+        max-age: 2592000
 
 
 

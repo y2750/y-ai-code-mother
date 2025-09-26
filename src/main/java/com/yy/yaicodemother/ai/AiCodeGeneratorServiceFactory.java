@@ -1,5 +1,8 @@
 package com.yy.yaicodemother.ai;
 
+import com.yy.yaicodemother.service.ChatHistoryService;
+import dev.langchain4j.community.store.memory.chat.redis.RedisChatMemoryStore;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
 import dev.langchain4j.service.AiServices;
@@ -25,11 +28,36 @@ public class AiCodeGeneratorServiceFactory {
     @Resource
     private StreamingChatModel streamingChatModel;
 
-    @Bean
-    public AiCodeGeneratorService aiCodeGeneratorService() {
+    @Resource
+    private RedisChatMemoryStore redisChatMemoryStore;
+
+    @Resource
+    private ChatHistoryService chatHistoryService;
+
+    /**
+     * 根据 appId 获取服务
+     */
+    public AiCodeGeneratorService getAiCodeGeneratorService(long appId) {
+        // 根据 appId 构建独立的对话记忆
+        MessageWindowChatMemory chatMemory = MessageWindowChatMemory
+                .builder()
+                .id(appId)
+                .chatMemoryStore(redisChatMemoryStore)
+                .maxMessages(20)
+                .build();
+
+        chatHistoryService.loadChatHistoryToMemory(appId,chatMemory,20);
         return AiServices.builder(AiCodeGeneratorService.class)
                 .chatModel(chatModel)
                 .streamingChatModel(streamingChatModel)
+                .chatMemory(chatMemory)
                 .build();
     }
+
+
+    @Bean
+    public AiCodeGeneratorService aiCodeGeneratorService() {
+        return getAiCodeGeneratorService(0);
+    }
 }
+

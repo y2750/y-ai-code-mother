@@ -10,7 +10,7 @@ import com.yy.yaicodemother.constant.UserConstant;
 import com.yy.yaicodemother.exception.BusinessException;
 import com.yy.yaicodemother.exception.ErrorCode;
 import com.yy.yaicodemother.exception.ThrowUtils;
-import com.yy.yaicodemother.model.dto.*;
+import com.yy.yaicodemother.model.dto.user.*;
 import com.yy.yaicodemother.model.vo.LoginUserVO;
 import com.yy.yaicodemother.model.vo.UserVO;
 import jakarta.annotation.Resource;
@@ -83,7 +83,7 @@ public class UserController {
      * @param request HTTP请求对象，用于获取当前会话信息
      * @return BaseResponse<LoginUserVO> 包含用户登录信息的响应对象
      */
-    @PostMapping("get/login")
+    @GetMapping("get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         // 调用userService的方法获取当前登录用户实体对象
         User user = userService.getLoginUser(request);
