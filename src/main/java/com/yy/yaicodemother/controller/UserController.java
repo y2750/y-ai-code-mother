@@ -10,7 +10,7 @@ import com.yy.yaicodemother.constant.UserConstant;
 import com.yy.yaicodemother.exception.BusinessException;
 import com.yy.yaicodemother.exception.ErrorCode;
 import com.yy.yaicodemother.exception.ThrowUtils;
-import com.yy.yaicodemother.model.dto.*;
+import com.yy.yaicodemother.model.dto.user.*;
 import com.yy.yaicodemother.model.vo.LoginUserVO;
 import com.yy.yaicodemother.model.vo.UserVO;
 import jakarta.annotation.Resource;
