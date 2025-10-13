@@ -2,7 +2,10 @@ package com.yy.yaicodemother.ai;
 
 import com.yy.yaicodemother.ai.model.HtmlCodeResult;
 import com.yy.yaicodemother.ai.model.MultiFileCodeResult;
+import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
+import dev.langchain4j.service.TokenStream;
+import dev.langchain4j.service.UserMessage;
 import reactor.core.publisher.Flux;
 
 /**
@@ -33,4 +36,12 @@ public interface AiCodeGeneratorService {
 
     @SystemMessage(fromResource = "prompt/codegen-multi-file-prompt.txt")
     Flux<String> generateMultiFileCodeStream(String userMessage);
+
+    /**
+     * 生成vue项目代码（流式）
+     * @param userMessage 用户输入的消息
+     * @return AI输出结果
+     */
+    @SystemMessage(fromResource = "prompt/codegen-vue-project-system-prompt.txt")
+    TokenStream generateVueProjectCodeStream(@MemoryId long appId, @UserMessage String userMessage);
 }
