@@ -3,6 +3,7 @@ package com.yy.yaicodemother.service;
 import cn.hutool.core.collection.CollUtil;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
+import com.yy.yaicodemother.model.dto.app.AppAddRequest;
 import com.yy.yaicodemother.model.dto.app.AppQueryRequest;
 import com.yy.yaicodemother.model.entity.App;
 
@@ -26,6 +27,8 @@ public interface AppService extends IService<App> {
 
     Flux<String>chatToGenCode(Long appId, String message, User loginUser);
 
+    Long createApp(AppAddRequest appAddRequest, User loginUser);
+
     /**
      * 部署应用
      * @param appId
@@ -33,6 +36,8 @@ public interface AppService extends IService<App> {
      * @return
      */
     String deployApp(Long appId, User loginUser);
+
+    void generateAppScreenshotAsync(Long appId, String appDeployUrl);
 
     AppVO getAppVO(App app);
 

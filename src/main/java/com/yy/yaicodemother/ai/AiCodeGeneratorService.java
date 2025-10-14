@@ -18,13 +18,13 @@ import reactor.core.publisher.Flux;
  * @Version 1.0
  */
 public interface AiCodeGeneratorService {
-/**
- * 生成代码的方法
- * 根据用户输入的消息生成相应的代码
- *
- * @param userMessage 用户输入的消息，用于生成代码的依据
- * @return 返回生成的代码字符串
- */
+    /**
+     * 生成代码的方法
+     * 根据用户输入的消息生成相应的代码
+     *
+     * @param userMessage 用户输入的消息，用于生成代码的依据
+     * @return 返回生成的代码字符串
+     */
     @SystemMessage(fromResource = "prompt/codegen-html-system-prompt.txt")
     HtmlCodeResult generateHtmlCode(String userMessage);
 

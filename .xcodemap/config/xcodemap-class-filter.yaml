@@ -1,5 +1,9 @@
 autoDetectedPackages:
 - com.yy.yaicodemother
+- dev.langchain4j.internal
+- dev.langchain4j.model.chat
+- dev.langchain4j.model.openai
+- dev.langchain4j.service
 enableAutoDetect: true
 entryDisplayConfig:
   excludedPathPatterns: []

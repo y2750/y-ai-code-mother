@@ -11,12 +11,4 @@ import com.yy.yaicodemother.model.entity.User;
  */
 public interface UserMapper extends BaseMapper<User> {
 
-    /**
-     * 应用 映射层。
-     *
-     * @author <a href="https://github.com/y2750">程序员yy</a>
-     */
-    interface AppMapper extends BaseMapper<App> {
-
-    }
 }

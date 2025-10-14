@@ -2,7 +2,7 @@ package com.yy.yaicodemother.ai;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.yy.yaicodemother.ai.tools.FileWriteTool;
+import com.yy.yaicodemother.ai.tools.*;
 import com.yy.yaicodemother.exception.BusinessException;
 import com.yy.yaicodemother.exception.ErrorCode;
 import com.yy.yaicodemother.model.enums.CodeGenTypeEnum;
@@ -29,6 +29,9 @@ import java.time.Duration;
  * @Create 2025/9/25 08:43
  * @Version 1.0
  */
+/**
+ * AI 服务创建工厂
+ */
 @Configuration
 @Slf4j
 public class AiCodeGeneratorServiceFactory {
@@ -47,6 +50,9 @@ public class AiCodeGeneratorServiceFactory {
 
     @Resource
     private ChatHistoryService chatHistoryService;
+
+    @Resource
+    private ToolManager toolManager;
 
     /**
      * AI 服务实例缓存
@@ -110,7 +116,7 @@ public class AiCodeGeneratorServiceFactory {
                     .chatModel(chatModel)
                     .streamingChatModel(reasoningStreamingChatModel)
                     .chatMemoryProvider(memoryId -> chatMemory)
-                    .tools(new FileWriteTool())
+                    .tools(toolManager.getAllTools())
                     // 处理工具调用幻觉问题
                     .hallucinatedToolNameStrategy(toolExecutionRequest ->
                             ToolExecutionResultMessage.from(toolExecutionRequest,
@@ -149,4 +155,3 @@ public class AiCodeGeneratorServiceFactory {
         return appId + "_" + codeGenType.getValue();
     }
 }
-
