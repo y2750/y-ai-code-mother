@@ -19,11 +19,14 @@ import com.yy.yaicodemother.model.dto.app.*;
 import com.yy.yaicodemother.model.entity.User;
 import com.yy.yaicodemother.model.enums.CodeGenTypeEnum;
 import com.yy.yaicodemother.model.vo.AppVO;
+import com.yy.yaicodemother.ratelimiter.annotation.RateLimit;
+import com.yy.yaicodemother.ratelimiter.enums.RateLimitType;
 import com.yy.yaicodemother.service.ProjectDownloadService;
 import com.yy.yaicodemother.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
@@ -93,6 +96,7 @@ public class AppController {
 
 
     @GetMapping(value = "/chat/gen/code", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @RateLimit(limitType = RateLimitType.USER, rate = 5, rateInterval = 60, message = "操作过于频繁，请稍后再试")
     public Flux<ServerSentEvent<String>> chatToGenCode(@RequestParam Long appId,@RequestParam String message, HttpServletRequest request) {
         ThrowUtils.throwIf(appId == null || appId < 0, ErrorCode.PARAMS_ERROR, "应用 id 错误");
         ThrowUtils.throwIf(StrUtil.isBlank(message), ErrorCode.PARAMS_ERROR, "消息不能为空");
@@ -258,6 +262,11 @@ public class AppController {
      * @return 精选应用列表
      */
     @PostMapping("/good/list/page/vo")
+    @Cacheable(
+            value = "good_app_page",
+            key = "T(com.yy.yaicodemother.utils.CacheKeyUtils).generateKry(#appQueryRequest)",
+            condition = "#appQueryRequest.pageNum <=10"
+    )
     public BaseResponse<Page<AppVO>> listGoodAppVOByPage(@RequestBody AppQueryRequest appQueryRequest) {
         ThrowUtils.throwIf(appQueryRequest == null, ErrorCode.PARAMS_ERROR);
         // 限制每页最多 20 个
