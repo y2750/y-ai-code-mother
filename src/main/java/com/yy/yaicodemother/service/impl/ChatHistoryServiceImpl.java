@@ -40,11 +40,22 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     private AppService appService;
 
     @Override
+    /**
+     * 分页查询应用的聊天历史记录
+     * @param appId 应用ID，必须为正数
+     * @param pageSize 每页记录数，必须在1-50之间
+     * @param lastCreateTime 上一次查询的创建时间，用于分页
+     * @param loginUser 当前登录用户，用于权限验证
+     * @return 返回分页结果，包含聊天历史记录列表
+     */
     public Page<ChatHistory> listAppChatHistoryByPage(Long appId, int pageSize,
                                                       LocalDateTime lastCreateTime,
                                                       User loginUser) {
+        // 验证应用ID参数
         ThrowUtils.throwIf(appId == null || appId <= 0, ErrorCode.PARAMS_ERROR, "应用ID不能为空");
+        // 验证分页大小参数
         ThrowUtils.throwIf(pageSize <= 0 || pageSize > 50, ErrorCode.PARAMS_ERROR, "页面大小必须在1-50之间");
+        // 验证用户是否登录
         ThrowUtils.throwIf(loginUser == null, ErrorCode.NOT_LOGIN_ERROR);
         // 验证权限：只有应用创建者和管理员可以查看
         App app = appService.getById(appId);
@@ -62,20 +73,30 @@ public class ChatHistoryServiceImpl extends ServiceImpl<ChatHistoryMapper, ChatH
     }
 
 
+/**
+ * 加载聊天历史到内存中的方法
+ * @param appId 应用ID，用于标识特定的应用
+ * @param chatMemory 聊天内存窗口，用于存储加载的聊天历史
+ * @param maxCount 最大加载的聊天历史条数
+ * @return 实际加载的聊天历史条数，如果加载失败则返回0
+ */
     @Override
     public int loadChatHistoryToMemory(Long appId, MessageWindowChatMemory chatMemory, int maxCount) {
         try {
+        // 创建查询条件，按应用ID查询，按创建时间倒序排列，并限制查询结果数量
             QueryWrapper queryWrapper = QueryWrapper.create()
-                    .eq(ChatHistory::getAppId, appId)
-                    .orderBy(ChatHistory::getCreateTime, false)
-                    .limit(1, maxCount);
+                    .eq(ChatHistory::getAppId, appId)  // 筛选指定应用ID的历史记录
+                    .orderBy(ChatHistory::getCreateTime, false)  // 按创建时间降序排列
+                    .limit(1, maxCount);  // 设置查询范围，从第1条开始，最多返回maxCount条记录
             List<ChatHistory> historyList = this.list(queryWrapper);
+        // 如果查询结果为空，直接返回0
             if(CollUtil.isEmpty(historyList)){
                 return 0;
             }
+        // 将查询结果反转，使最早的记录在前
             historyList = historyList.reversed();
 
-            int loadedCount = 0;
+            int loadedCount = 0;  // 记录已加载的聊天历史数量
             chatMemory.clear();;
 
             for (ChatHistory history : historyList) {

@@ -27,7 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  */
 @Aspect  // 声明这是一个切面类
 @Component  // 声明这是一个Spring组件
-public class AuthInterceptor {
+public class        AuthInterceptor {
 
     @Resource  // 自动注入UserService
     private UserService userService;

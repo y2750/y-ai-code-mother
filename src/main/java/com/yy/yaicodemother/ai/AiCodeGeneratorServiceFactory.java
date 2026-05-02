@@ -2,6 +2,8 @@ package com.yy.yaicodemother.ai;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.yy.yaicodemother.ai.guardrail.PromptSafetyInputGuardrail;
+import com.yy.yaicodemother.ai.guardrail.RetryOutputGuardrail;
 import com.yy.yaicodemother.ai.tools.*;
 import com.yy.yaicodemother.exception.BusinessException;
 import com.yy.yaicodemother.exception.ErrorCode;
@@ -101,7 +103,7 @@ public class AiCodeGeneratorServiceFactory {
                 .builder()
                 .id(appId)
                 .chatMemoryStore(redisChatMemoryStore)
-                .maxMessages(20)
+                .maxMessages(50)
                 .build();
         // 从数据库中加载对话历史到记忆中
         chatHistoryService.loadChatHistoryToMemory(appId, chatMemory, 20);
@@ -119,6 +121,9 @@ public class AiCodeGeneratorServiceFactory {
                                 ToolExecutionResultMessage.from(toolExecutionRequest,
                                         "Error: there is no tool called " + toolExecutionRequest.name())
                         )
+                        .maxSequentialToolsInvocations(20)
+                        .inputGuardrails(new PromptSafetyInputGuardrail())
+                        //.outputGuardrails(new RetryOutputGuardrail())
                         .build();
             }
             // HTML 和 多文件生成，使用流式对话模型
@@ -128,6 +133,8 @@ public class AiCodeGeneratorServiceFactory {
                         .chatModel(chatModel)
                         .streamingChatModel(openAiStreamingChatModel)
                         .chatMemory(chatMemory)
+                        .inputGuardrails(new PromptSafetyInputGuardrail())
+                        //.outputGuardrails(new RetryOutputGuardrail())
                         .build();
             }
             default ->
