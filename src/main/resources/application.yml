@@ -1,25 +1,23 @@
 spring:
   application:
-    name:y-ai-code-mother-backend
+    name: y-ai-code-mother-backend
   session:
     store-type: redis
     timeout: 2592000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/y_ai_code_mother
+    url: jdbc:mysql://mysql:3306/y_ai_code_mother?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: a600523
   profiles:
     active: local
-  # redis
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
       password:
       ttl: 3600
       database: 0
-
 
 server:
   port: 8000
@@ -28,8 +26,6 @@ server:
     session:
       cookie:
         max-age: 2592000
-
-
 
 springdoc:
   group-configs:

@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: yai-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: a600523
+      MYSQL_DATABASE: y_ai_code_mother
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: yai-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: yai-backend
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./tmp:/app/tmp
+
+  frontend:
+    build:
+      context: ./y-ai-code-mother-frontend
+      dockerfile: Dockerfile.frontend
+    container_name: yai-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:
+  redis_data:
