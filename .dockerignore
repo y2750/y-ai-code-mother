@@ -1,0 +1,7 @@
+.git
+.idea
+target
+node_modules
+tmp
+y-ai-code-mother-frontend/node_modules
+y-ai-code-mother-frontend/dist
